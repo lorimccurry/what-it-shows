@@ -27,11 +27,14 @@ report actually says — so nothing in the pipeline could have found this on its
 
 <SplitTable ticket={4471} />
 
-`parser` and `hint` are the two bugs the desk already modeled. `timezone` is not a day/month
-mix-up at all: it's 5 reports where the invite's calendar day depends on which timezone opened
-it, or showed up a day off with no month confusion in sight. `desk-notes.json` already named
-these 5 ids under `oneDayMove` — the desk noticed, and still filed every one of them under
-`parser`, footnoted, because the classifier has no third bucket to put them in.
+`parser` and `hint` are the two bugs the desk already modeled, counted exactly as the desk's own
+export counts them — this page changes no counting logic, only adds a third row. `timezone` is
+not a day/month mix-up at all: it's 5 reports where the invite's calendar day depends on which
+timezone opened it, or showed up a day off with no month confusion in sight. `desk-notes.json`
+already named these 5 ids under `oneDayMove` — the desk noticed, and still filed every one of
+them under `parser` too, footnoted, because `causeOf()` has no third bucket to put them in. So
+`parser`'s 379 and `timezone`'s 5 overlap: same 412 reports, read a second way, not a different
+split of them.
 
 ## Why these 5 aren't `parser` or `hint`
 
@@ -56,7 +59,7 @@ already flagged — independent confirmation, not a guess.
 
 One GitHub issue per real problem, each carrying its report count. Filed in this repo:
 
-- [`parser`](https://github.com/lorimccurry/what-it-shows/issues/1) — 374 reports
+- [`parser`](https://github.com/lorimccurry/what-it-shows/issues/1) — 379 reports
 - [`hint`](https://github.com/lorimccurry/what-it-shows/issues/2) — 33 reports
 - [`timezone`](https://github.com/lorimccurry/what-it-shows/issues/3) — 5 reports
 

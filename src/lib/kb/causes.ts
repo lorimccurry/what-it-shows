@@ -96,53 +96,30 @@ export function readAs(g: CauseGroup, ids: readonly string[]): number {
   return g.reports.filter((r) => ids.includes(r.id)).length;
 }
 
-// --- the real split ---
-// causeOf() only ever returns 'parser' or 'hint': tenant + channel, nothing else. desk-notes.json's
-// oneDayMove list is where the desk already noticed some reports don't fit either story — a report
-// that's a day off, or a day that depends on which timezone opened it, not on which way round
-// anyone wrote a date. Those still got filed under whatever causeOf() guessed, footnoted, left there.
-export type RealCause = Cause | 'timezone';
-export const REAL_CAUSES: readonly RealCause[] = ['parser', 'hint', 'timezone'];
+// --- the third problem ---
+// causeOf() only ever returns 'parser' or 'hint': tenant + channel, nothing else. It never reads
+// a report's id, so it can't know about this one. desk-notes.json's oneDayMove list is the desk's
+// own view, already in the export: 5 reports it already noticed don't read as a day/month swap.
+// They're still counted under `parser` above (that's where causeOf() files them) — this is the
+// same 412 reports, read a second way, not a different partition of them.
+export type ExtraCause = 'timezone';
 
-export function realCauseOf(
-  r: Pick<Report, 'id' | 'channel'>,
-  t: Tenant | undefined,
-  oneDayMoveIds: readonly string[],
-): RealCause | null {
-  if (oneDayMoveIds.includes(r.id)) return 'timezone';
-  return causeOf(r, t);
-}
-
-export type RealCauseGroup = {
-  cause: RealCause | 'unplaced';
+export type ExtraCauseGroup = {
+  cause: ExtraCause;
   reports: Report[];
   tenants: number;
   firstSeen: string;
   lastSeen: string;
-  mergedInto: number[];
 };
 
-export function groupByRealCause(
-  reports: Report[],
-  tenantOf: (r: Report) => Tenant | undefined,
-  oneDayMoveIds: readonly string[],
-): RealCauseGroup[] {
-  const byCause = new Map<RealCauseGroup['cause'], Report[]>();
-  for (const r of reports) {
-    const cause = realCauseOf(r, tenantOf(r), oneDayMoveIds) ?? 'unplaced';
-    byCause.set(cause, [...(byCause.get(cause) ?? []), r]);
-  }
-  return [...byCause.entries()]
-    .map(([cause, rs]) => {
-      const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();
-      return {
-        cause,
-        reports: rs,
-        tenants: new Set(rs.map((r) => r.tenant)).size,
-        firstSeen: days[0],
-        lastSeen: days[days.length - 1],
-        mergedInto: [...new Set(rs.flatMap((r) => (r.mergedInto ? [r.mergedInto] : [])))],
-      };
-    })
-    .sort((a, b) => b.reports.length - a.reports.length);
+export function oneDayMoveGroup(reports: Report[], oneDayMoveIds: readonly string[]): ExtraCauseGroup {
+  const rs = reports.filter((r) => oneDayMoveIds.includes(r.id));
+  const days = rs.map((r) => r.receivedAt.slice(0, 10)).sort();
+  return {
+    cause: 'timezone',
+    reports: rs,
+    tenants: new Set(rs.map((r) => r.tenant)).size,
+    firstSeen: days[0],
+    lastSeen: days[days.length - 1],
+  };
 }
