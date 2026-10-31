@@ -4,7 +4,7 @@ title: '#4471 was three problems, not one'
 owner: lorimccurry
 status: open
 reviewed: 2026-10-30
-signature: lorimccurry
+signature: v1.eyJzdWIiOiIyNTYyIiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTM0MTM0MjcsImV4cCI6MTc5MzQ5OTgyN30.zmmJGPkX5rSCpHbFV6MA8TShRY7-76UMumVcbTxzKzU
 ---
 
 <script>
