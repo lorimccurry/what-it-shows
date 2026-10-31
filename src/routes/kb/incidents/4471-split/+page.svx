@@ -57,10 +57,15 @@ already flagged — independent confirmation, not a guess.
 
 ## Tickets filed
 
-One GitHub issue per real problem, each carrying its report count. Filed in this repo:
+One GitHub issue per real problem, each carrying its report count. `#4471` itself closed 05 Oct
+with an engineering update covering two of the three — the third was never part of that update,
+because the desk's own classifier never separated it out:
 
-- [`parser`](https://github.com/lorimccurry/what-it-shows/issues/1) — 379 reports
-- [`hint`](https://github.com/lorimccurry/what-it-shows/issues/2) — 33 reports
-- [`timezone`](https://github.com/lorimccurry/what-it-shows/issues/3) — 5 reports
+- [`parser`](https://github.com/lorimccurry/what-it-shows/issues/1) — 379 reports — **fixed**:
+  `fix(dates): parse dd/mm for eu locales`
+- [`hint`](https://github.com/lorimccurry/what-it-shows/issues/2) — 33 reports — **won't fix**:
+  booking-v3 form retired
+- [`timezone`](https://github.com/lorimccurry/what-it-shows/issues/3) — 5 reports — **open**:
+  not part of the 05 Oct update, still unaddressed
 
 <RenderStamp {signature} />

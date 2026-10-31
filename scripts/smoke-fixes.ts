@@ -1,6 +1,5 @@
 // Throwaway verification, not part of the build: proves each fix against the real report it fixes.
 import { parseBookingDate, parseBookingDateBuggy } from '../src/lib/kb/parse-date.ts';
-import { correctDateHint } from '../src/lib/kb/hint-fix.ts';
 import { inviteDayFor } from '../src/lib/kb/invite-timezone.ts';
 
 function assertEqual(actual: unknown, expected: unknown, label: string) {
@@ -16,9 +15,8 @@ assertEqual(buggy.toISOString().slice(0, 10), '2026-07-04', 'parser bug reproduc
 const fixed = parseBookingDate(7, 4, 2026, { locale: 'en-GB' });
 assertEqual(fixed.toISOString().slice(0, 10), '2026-04-07', 'parser fix reads 7 April correctly');
 
-// Fix #2 — alder.physio (de-DE, day-first, booking-v3): hint said MM/DD/YYYY, should say DD/MM/YYYY.
-assertEqual(correctDateHint({ locale: 'de-DE' }), 'DD/MM/YYYY', 'hint fix matches a day-first tenant');
-assertEqual(correctDateHint({ locale: 'en-US' }), 'MM/DD/YYYY', 'hint fix leaves a month-first tenant alone');
+// Issue #2 (hint) has no fix here: the desk's 05 Oct engineering update closed it won't-fix —
+// booking-v3, the form that printed the wrong hint, was retired outright. Nothing to verify.
 
 // Fix #3 — R-41344: "Client in Lisbon got Tuesday. Client in Toronto got Monday. Same meeting."
 const instant = '2026-06-12T23:30:00Z';
